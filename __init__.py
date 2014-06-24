@@ -101,19 +101,21 @@ class Shape(RelativeLayout):
     Shape class
     '''
 
-    shape_size = BoundedNumericProperty(256, min=1, max=1024, errorvalue=256)
+    shape_size = BoundedNumericProperty(256, min=1, max=512, errorvalue=512)
     color = StringProperty('3619ffff')
+    bg_color = StringProperty('19526699')
     a = BoundedNumericProperty(1, min=0.1, max=1, errorvalue=1)
     b = BoundedNumericProperty(1, min=0.1, max=1, errorvalue=1)
     m = BoundedNumericProperty(7, min=-100, max=100, errorvalue=16)
     n1 = BoundedNumericProperty(2, min=1, max=50, errorvalue=4)
     n2 = BoundedNumericProperty(8, min=1, max=50, errorvalue=4)
     n3 = BoundedNumericProperty(4, min=1, max=50, errorvalue=10)
-    nbp = BoundedNumericProperty(100, min=1, max=1000, errorvalue=100)
-    percent = BoundedNumericProperty(1.0, min=1, max=100, errorvalue=1)
+    nbp = BoundedNumericProperty(100, min=2, max=1000, errorvalue=100)
+    percent = BoundedNumericProperty(1, min=1, max=10, errorvalue=1)
     travel = BoundedNumericProperty(2, min=2, max=100, errorvalue=2)
     line = BooleanProperty(False)
-    wdth = BoundedNumericProperty(1, min=1, max=50, errorvalue=1)
+    wdth = BoundedNumericProperty(1, min=1, max=10, errorvalue=1)
+    path = ListProperty()
 
     def __init__(self, **kwargs):
         super(Shape, self).__init__(**kwargs)
@@ -122,6 +124,7 @@ class Shape(RelativeLayout):
             size=self.update,
             shape_size=self.update,
             color=self.update,
+            bg_color=self.update,
             a=self.update,
             b=self.update,
             m=self.update,
@@ -140,7 +143,10 @@ class Shape(RelativeLayout):
             self.canvas.clear()
 
             # Background configuration
-            Color(0, 0, 0)
+            Color(
+                get_color_from_hex(self.bg_color)[0],
+                get_color_from_hex(self.bg_color)[1],
+                get_color_from_hex(self.bg_color)[2], 100)
             Rectangle(pos=self.pos, size=self.size)
 
             # Path configuration
@@ -163,21 +169,24 @@ class Shape(RelativeLayout):
                 b=self.b,
                 travel=math.pi * self.travel)
 
-            path = []
+            # clear path list
+            self.path[:] = []
             for elem in s:
-                path.append(elem[0])
-                path.append(elem[1])
+                self.path.append(elem[0])
+                self.path.append(elem[1])
+
+            print self.path
 
             if self.line:
                 Line(
-                    points=(path),
+                    points=(self.path),
                     width=self.wdth,
                     cap="round",
                     joint="round",
                     close=True)
             else:
                 Point(
-                    points=(path),
+                    points=(self.path),
                     pointsize=self.wdth,
                     cap="round",
                     joint="round",
@@ -189,7 +198,7 @@ class ShapeTest(App):
     """
     
     def build(self):
-        shape = Shape(n1=7, size_hint=(0.8, 1))
+        shape = Shape(n1=7, color='3619ffff', bg_color='19526699', size_hint=(0.8, 1))
         return shape
 
 if __name__ in ('__main__'):
