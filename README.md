@@ -5,7 +5,10 @@ Generate super shape with Kivy framework
 
 Example
 
-	shape = Shape(n1=7, size_hint=(0.8, 1))
+	class ShapeTest(App):
+        def build(self):
+            shape = Shape(n1=7, color='3619ffff', bg_color='19526699', size_hint=(0.8, 1))
+            return shape
 
 Properties
 
