@@ -175,8 +175,6 @@ class Shape(RelativeLayout):
                 self.path.append(elem[0])
                 self.path.append(elem[1])
 
-            print self.path
-
             if self.line:
                 Line(
                     points=(self.path),
